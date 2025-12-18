@@ -95,6 +95,13 @@ RISC0_DEV_MODE=1 cargo run --release --bin fuse-prove -- \
 cargo run --release --bin fuse-verify -- test.vce
 ```
 
+## Specification Publication
+
+**VCE Specification v0.1** has been published:
+- Complete specification document: [specs/VCE_SPECIFICATION_V0.1.md](../specs/VCE_SPECIFICATION_V0.1.md)
+- JSON schemas for validation: [specs/schemas/](../specs/schemas/)
+- The VCE format is now a published, versioned standard
+
 ## Next Steps: Phase 2
 
 Phase 1 is complete. Ready to proceed to Phase 2:

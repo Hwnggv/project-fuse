@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ProjectFuse/vce-spec/blob/main/specs/schemas/compliance-spec-schema.json",
+  "title": "ComplianceSpec Schema",
+  "description": "JSON Schema for validating ComplianceSpec input files",
+  "type": "object",
+  "required": [
+    "claim",
+    "system_hash",
+    "constraints",
+    "jurisdiction",
+    "version",
+    "expiry"
+  ],
+  "properties": {
+    "claim": {
+      "type": "string",
+      "description": "Human-readable description of the compliance requirement being verified",
+      "minLength": 1,
+      "examples": [
+        "SOC2 control X verified",
+        "GDPR data residency",
+        "Supply chain provenance",
+        "ML model usage constraint"
+      ]
+    },
+    "system_hash": {
+      "type": "string",
+      "description": "SHA256 hash (hex-encoded) of the system binary, configuration, or data being verified",
+      "minLength": 1,
+      "pattern": "^[0-9a-fA-F]+$",
+      "examples": [
+        "a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456"
+      ]
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Key-value pairs defining verification parameters and constraints for the compliance check",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "examples": [
+        {
+          "control_X": "enforced in all transactions",
+          "sampling": "last 1000 events"
+        },
+        {
+          "data_region": "EU",
+          "requirement": "All personal data must be stored within EU boundaries"
+        }
+      ]
+    },
+    "jurisdiction": {
+      "type": "string",
+      "description": "Regulatory framework or jurisdiction applicable to this compliance check",
+      "minLength": 1,
+      "examples": [
+        "US, SEC",
+        "EU, GDPR",
+        "US, NIST",
+        "US, Multi-jurisdictional"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the compliance specification",
+      "minLength": 1,
+      "examples": [
+        "1.0",
+        "1.2.3"
+      ]
+    },
+    "expiry": {
+      "type": "string",
+      "description": "RFC3339 datetime string indicating when this specification expires",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "examples": [
+        "2026-12-31T23:59:59Z"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional framework-specific metadata (optional)",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "examples": [
+        {
+          "standard": "SOC2",
+          "control_id": "CC6.1",
+          "description": "Access control verification for system events"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}
+

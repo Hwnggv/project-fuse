@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ProjectFuse/vce-spec/blob/main/specs/schemas/vce-schema.json",
+  "title": "VCE File Schema",
+  "description": "JSON Schema for validating Verifiable Compliance Envelope (.vce) files",
+  "type": "object",
+  "required": [
+    "spec",
+    "proof"
+  ],
+  "properties": {
+    "spec": {
+      "$ref": "compliance-spec-schema.json",
+      "description": "The compliance specification that was verified"
+    },
+    "proof": {
+      "type": "object",
+      "description": "The zero-knowledge proof of compliance check execution",
+      "required": [
+        "proof_data",
+        "spec_hash",
+        "result",
+        "timestamp",
+        "journal"
+      ],
+      "properties": {
+        "proof_data": {
+          "type": "array",
+          "description": "Serialized RISC Zero receipt containing the cryptographic proof (bincode format, represented as array of bytes)",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "examples": [
+            [],
+            [3, 0, 0, 0, 0, 0, 0, 0]
+          ]
+        },
+        "spec_hash": {
+          "type": "string",
+          "description": "SHA256 hash (hex-encoded) of the ComplianceSpec that was verified",
+          "minLength": 1,
+          "pattern": "^[0-9a-fA-F]+$",
+          "examples": [
+            "abc123def456..."
+          ]
+        },
+        "result": {
+          "type": "string",
+          "description": "Result of the compliance check",
+          "enum": [
+            "Pass",
+            "Fail"
+          ],
+          "examples": [
+            "Pass",
+            "Fail"
+          ]
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "RFC3339 datetime string indicating when the proof was generated",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+          "examples": [
+            "2025-01-15T10:30:00Z"
+          ]
+        },
+        "journal": {
+          "type": "array",
+          "description": "RISC Zero journal containing public outputs from zkVM execution (represented as array of bytes)",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "examples": [
+            [0, 0, 0, 0]
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "string",
+      "description": "Optional cryptographic signature for additional authenticity (reserved for future use)",
+      "examples": [
+        ""
+      ]
+    }
+  },
+  "additionalProperties": false
+}
+

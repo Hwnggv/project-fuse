@@ -4,6 +4,8 @@
 
 Project FUSE (Verifiable Compliance Envelope Protocol) is a zero-knowledge proof system for verifiable compliance claims. This document describes the architecture and design decisions.
 
+**Note**: For the complete, formal specification of the VCE format, see [VCE Specification v0.1](../specs/VCE_SPECIFICATION_V0.1.md). This architecture document describes the implementation; the specification document defines the standard format.
+
 ## Core Components
 
 ### 1. Compliance Specification (`fuse-core/src/spec.rs`)
@@ -118,7 +120,11 @@ Phase 1 zkVM integration is fully operational. The system generates real RISC Ze
 
 ## File Formats
 
+**Formal Specification**: The complete VCE file format and ComplianceSpec format are defined in [VCE Specification v0.1](../specs/VCE_SPECIFICATION_V0.1.md). JSON schemas for validation are available in [specs/schemas/](../specs/schemas/).
+
 ### Specification Format (JSON/YAML)
+
+The `ComplianceSpec` format is fully documented in the [VCE Specification v0.1](../specs/VCE_SPECIFICATION_V0.1.md#compliancespec-format). Example:
 
 ```json
 {
@@ -136,6 +142,8 @@ Phase 1 zkVM integration is fully operational. The system generates real RISC Ze
 
 ### VCE Format (.vce)
 
+The complete VCE file format is defined in [VCE Specification v0.1](../specs/VCE_SPECIFICATION_V0.1.md#vce-file-format). Example structure:
+
 ```json
 {
   "spec": { /* ComplianceSpec */ },
@@ -148,6 +156,8 @@ Phase 1 zkVM integration is fully operational. The system generates real RISC Ze
   }
 }
 ```
+
+For complete field descriptions, validation rules, and examples, see the [formal specification](../specs/VCE_SPECIFICATION_V0.1.md).
 
 ## Security Considerations
 

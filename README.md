@@ -14,6 +14,8 @@ Early PoC — software-only, open-source, grant-focused.
 
 **MVP Status**: ✅ Complete - Ready for demonstration and grant proposals. See [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for details.
 
+**VCE Specification v0.1**: ✅ **Published** - The formal VCE specification is now available. See [specs/VCE_SPECIFICATION_V0.1.md](specs/VCE_SPECIFICATION_V0.1.md) for the complete specification.
+
 ## Quick Start
 
 ### Installation
@@ -49,6 +51,9 @@ ProjectFuse/
 ├── examples/           # Example specs and test data
 │   ├── specs/         # VCE specification files
 │   └── systems/       # Sample system data for testing
+├── specs/              # VCE specification and schemas
+│   ├── VCE_SPECIFICATION_V0.1.md  # Formal specification
+│   └── schemas/       # JSON Schema validation files
 └── docs/              # Documentation
 ```
 
@@ -88,11 +93,26 @@ ProjectFuse/
 
 [To be determined - open source]
 
+## Specification
+
+**VCE Specification v0.1** is now published as an open standard:
+
+- **[VCE Specification v0.1](specs/VCE_SPECIFICATION_V0.1.md)** - Complete specification document
+- **[JSON Schemas](specs/schemas/)** - Validation schemas for `.vce` files and input specs
+- **[Specs Directory](specs/)** - Specification documentation and schemas
+
+The VCE format is designed to be:
+- **Portable**: Works offline, no network dependency
+- **Verifiable**: Cryptographic verification without platform lock-in
+- **Standardized**: Open format, implementable by anyone
+- **Interoperable**: Works across platforms and languages
+
 ## Documentation
 
 - [Quick Start Guide](docs/QUICKSTART.md) - Get started in minutes
 - [Architecture Documentation](docs/ARCHITECTURE.md) - Technical deep dive
 - [Implementation Status](docs/IMPLEMENTATION_STATUS.md) - Current state and roadmap
+- [VCE Specification v0.1](specs/VCE_SPECIFICATION_V0.1.md) - Formal specification
 
 ## Contributing
 
