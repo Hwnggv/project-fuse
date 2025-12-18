@@ -7,6 +7,7 @@ pub mod spec;
 pub mod envelope;
 pub mod proof;
 pub mod error;
+pub mod zkvm;
 
 pub use spec::ComplianceSpec;
 pub use envelope::VerifiableComplianceEnvelope;

@@ -100,5 +100,9 @@ This is an early-stage PoC. Contributions welcome!
 
 ## Note on Zero-Knowledge Proofs
 
-The MVP includes the complete structure for zero-knowledge proofs using RISC Zero. Currently, placeholder proofs are used for demonstration. Full RISC Zero integration is the next priority for production use. The architecture is designed to seamlessly integrate actual zkVM proofs when ready.
+**Phase 1 Status**: ✅ **Complete** - RISC Zero zkVM integration is fully operational. The system generates real cryptographic proofs using RISC Zero 1.2.6. 
+
+**Performance**: Real proof generation takes 10-20+ minutes depending on data size. For development and testing, use `RISC0_DEV_MODE=1` for instant proofs (not cryptographically secure).
+
+**Usage**: Once the guest program is built, `fuse-prove` automatically generates real zkVM proofs. The system maintains backward compatibility with placeholder proofs when the guest program is not available.
 

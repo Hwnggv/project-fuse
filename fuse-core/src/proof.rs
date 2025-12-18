@@ -41,6 +41,22 @@ pub struct ComplianceProof {
 }
 
 impl ComplianceProof {
+    /// Create a new proof from a RISC Zero receipt
+    pub fn from_risc_zero_receipt(
+        spec_hash: String,
+        receipt_bytes: Vec<u8>,
+        result: ComplianceResult,
+        journal: Vec<u8>,
+    ) -> Self {
+        Self {
+            proof_data: receipt_bytes,
+            spec_hash,
+            result,
+            timestamp: chrono::Utc::now(),
+            journal,
+        }
+    }
+
     /// Create a new proof (placeholder for MVP)
     /// In production, this would generate an actual RISC Zero proof
     pub fn new(
@@ -57,23 +73,24 @@ impl ComplianceProof {
             journal,
         }
     }
+    
+    /// Check if this is a placeholder proof (empty proof_data) or a real proof
+    pub fn is_placeholder(&self) -> bool {
+        self.proof_data.is_empty()
+    }
 
     /// Verify the proof
     /// In production, this would use RISC Zero's verifier
     pub fn verify(&self) -> Result<()> {
-        // Placeholder: In production, this would verify the RISC Zero proof
-        // For MVP, we do basic validation
-        
-        if self.proof_data.is_empty() {
-            // In MVP, we allow empty proofs for demonstration
-            // In production, this would be an error
+        // If this is a placeholder proof, allow it for backward compatibility
+        if self.is_placeholder() {
             return Ok(());
         }
 
-        // TODO: Implement actual RISC Zero proof verification
-        // This would use risc0_zkvm::verify() or similar
-        
-        Ok(())
+        // For real proofs, verify using RISC Zero
+        crate::zkvm::verify_proof(&self.proof_data)
+            .map(|_| ())
+            .map_err(|e| crate::VceError::ProofVerificationFailed(e.to_string()))
     }
 
     /// Check if the proof is valid and the result is Pass

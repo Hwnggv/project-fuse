@@ -5,6 +5,7 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+build = "build.rs"
 
 [dependencies]
 serde.workspace = true
@@ -17,4 +18,6 @@ hex.workspace = true
 chrono.workspace = true
 risc0-zkvm.workspace = true
 risc0-zkvm-platform.workspace = true
+risc0-binfmt = "1.0"
+bincode = "1.3"
 

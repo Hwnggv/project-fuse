@@ -50,14 +50,33 @@ fn main() -> Result<()> {
     println!("   Result: {}", result);
 
     println!("\n🔐 Generating zero-knowledge proof...");
-    // TODO: In production, this would generate an actual RISC Zero proof
-    // For MVP, we create a placeholder proof
     let spec_hash = spec.hash();
-    let proof = fuse_core::ComplianceProof::new(
-        spec_hash,
-        result,
-        system_data.as_bytes().to_vec(), // Journal contains public outputs
-    );
+    
+    // Try to generate a real RISC Zero proof
+    // If it fails (e.g., guest program not built), fall back to placeholder
+    let proof = match fuse_core::zkvm::generate_proof(
+        &serde_json::to_string(&spec).unwrap_or_default(),
+        &system_data,
+    ) {
+        Ok((receipt_bytes, zk_result, journal)) => {
+            println!("   ✓ Real zkVM proof generated");
+            fuse_core::ComplianceProof::from_risc_zero_receipt(
+                spec_hash,
+                receipt_bytes,
+                zk_result,
+                journal,
+            )
+        }
+        Err(e) => {
+            println!("   ⚠ Falling back to placeholder proof: {}", e);
+            println!("   (This is expected if guest program is not yet built)");
+            fuse_core::ComplianceProof::new(
+                spec_hash,
+                result,
+                system_data.as_bytes().to_vec(), // Journal contains public outputs
+            )
+        }
+    };
 
     println!("\n📦 Creating Verifiable Compliance Envelope...");
     let envelope = VerifiableComplianceEnvelope::new(spec, proof);

@@ -36,6 +36,14 @@ fn main() -> Result<()> {
     }
 
     println!("\n🔍 Verifying envelope...");
+    
+    // Check if this is a placeholder or real proof
+    if envelope.proof.is_placeholder() {
+        println!("   ℹ️  Placeholder proof detected (backward compatibility mode)");
+    } else {
+        println!("   ✓ Real zkVM proof detected");
+    }
+    
     match envelope.verify() {
         Ok(()) => {
             println!("✅ Envelope is valid!");

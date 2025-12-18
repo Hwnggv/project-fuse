@@ -200,7 +200,3 @@ FUSE defines a **standard cryptographic artifact** — the Verifiable Compliance
 An open-source, zkVM-based framework that produces **Verifiable Compliance Envelopes** — cryptographic artifacts proving a mechanical compliance claim was executed correctly. The MVP focuses on real-world, boring but high-value civilian claims (SOC2, GDPR, supply chain). Deliverables include CLI tooling, example spec files, and reproducible `.vce` artifacts. Grants and early adoption fund circuit library and governance development, with defense/dual-use as optional future extensions.
 
 ---
-
-If you want, the next step I can produce is **a fully detailed MVP spec for one concrete claim (SOC2-style)** with example spec, proof flow, and CLI commands — essentially a “ready-to-code blueprint” for day one.
-
-Do you want me to do that next?

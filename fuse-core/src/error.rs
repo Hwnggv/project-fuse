@@ -29,5 +29,17 @@ pub enum VceError {
 
     #[error("RISC Zero error: {0}")]
     RiscZero(String),
+
+    #[error("Proof generation failed: {0}")]
+    ProofGenerationFailed(String),
+
+    #[error("Guest program execution error: {0}")]
+    GuestProgramExecution(String),
+
+    #[error("Input serialization error: {0}")]
+    InputSerialization(String),
+
+    #[error("Receipt deserialization error: {0}")]
+    ReceiptDeserialization(String),
 }
 

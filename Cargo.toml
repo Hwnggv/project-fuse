@@ -3,6 +3,7 @@ members = [
     "fuse-core",
     "fuse-cli",
     "fuse-checkers",
+    "fuse-guest",
 ]
 resolver = "2"
 
@@ -26,8 +27,8 @@ clap = { version = "4.5", features = ["derive"] }
 sha2 = "0.10"
 hex = "0.4"
 
-# RISC Zero (zkVM)
-risc0-zkvm = "1.0"
+# RISC Zero (zkVM) - 1.0+ for stable API
+risc0-zkvm = { version = "1.0", features = ["prove"] }
 risc0-zkvm-platform = "1.0"
 
 # Time handling

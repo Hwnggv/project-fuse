@@ -1,8 +1,8 @@
 # Rust
 target/
-Cargo.lock
 **/*.rs.bk
 *.pdb
+# Note: Cargo.lock is committed for applications (this project has binaries)
 
 # IDE
 .idea/
@@ -11,15 +11,32 @@ Cargo.lock
 *.swo
 *~
 
-# Build artifacts
+# Build artifacts and test outputs
 *.vce
 compliance.vce
 output/
+test*.vce
+
+# RISC Zero specific
+# Note: Guest ELF binaries are large and should not be committed
+# They are built from source and can be regenerated
+fuse-guest/target/riscv32im-risc0-zkvm-elf/
+target/riscv32im-risc0-zkvm-elf/
 
 # OS
 .DS_Store
 Thumbs.db
+*.DS_Store
 
 # Logs
 *.log
+*.log.*
 
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+*.bak

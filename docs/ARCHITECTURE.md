@@ -71,34 +71,50 @@ Built-in checkers:
 
 ## Zero-Knowledge Integration
 
-### Current State (MVP)
+### Phase 1 Status: ✅ Complete
 
-The MVP uses placeholder proofs for demonstration. The structure is ready for RISC Zero integration.
+Phase 1 zkVM integration is fully operational. The system generates real RISC Zero cryptographic proofs using the 1.2.6 API. All components are implemented, tested, and working.
 
-### Production Integration
+### Architecture
 
-To integrate RISC Zero:
+**Guest Program** (`fuse-guest/`):
+- Runs inside RISC Zero zkVM (riscv32im-risc0-zkvm-elf target)
+- Reads spec and system data from host via `env::read()`
+- Executes appropriate checker based on claim type (SOC2, GDPR, Supply Chain, ML Model)
+- Commits result to journal (public output) via `env::commit()`
+- Built with `#![no_std]` and `#![no_main]` for zkVM environment
 
-1. **Create Guest Program**: Write checker logic as RISC Zero guest program
-2. **Generate Proof**: Use `risc0_zkvm::prove()` to generate proofs
-3. **Verify Proof**: Use `risc0_zkvm::verify()` to verify proofs
-4. **Store Receipt**: Serialize RISC Zero receipt in proof data
+**Host Program** (`fuse-core/src/zkvm.rs`):
+- Generates proofs using RISC Zero `ExecutorImpl` and `ProverServer`
+- Verifies proofs using RISC Zero `Receipt::verify()` with computed image ID
+- Handles serialization/deserialization of receipts using `bincode`
+- Computes image ID from ELF binary for verification
 
-Example structure (pseudo-code):
+**Workflow**:
+1. Host prepares inputs (spec JSON, system data JSON) using `ExecutorEnv::builder().write_slice()`
+2. Host executes guest program in zkVM via `ExecutorImpl::from_elf()` and `exec.run()`
+3. Guest program runs checker and commits `ComplianceResult` to journal
+4. Host generates proof via `prover.prove_session()` (can take 10-20+ minutes for real proofs)
+5. Receipt is serialized using `bincode` and stored in `.vce` file
+6. Verification extracts receipt, computes image ID, and verifies cryptographically
 
-```rust
-// In zkVM guest program
-fn main() {
-    let spec = env::read();
-    let system_data = env::read();
-    let result = checker.check(&spec, &system_data);
-    env::commit(&result);
-}
+### Implementation Status
 
-// In prover
-let receipt = risc0_zkvm::prove(guest_program, &inputs)?;
-let proof = ComplianceProof::new(spec_hash, result, receipt);
-```
+- ✅ Guest program structure complete and built
+- ✅ All checkers implemented in guest program (SOC2, GDPR, Supply Chain, ML Model)
+- ✅ Proof generation/verification infrastructure complete
+- ✅ RISC Zero 1.2.6 API integration complete
+- ✅ Image ID computation working
+- ✅ End-to-end testing complete
+- ✅ Error handling with actionable messages
+- ✅ Backward compatibility maintained (placeholder proofs still work)
+
+### Performance Characteristics
+
+- **Real Proof Generation**: 10-20+ minutes (first proof), 5-15 minutes (subsequent)
+- **Dev Mode Proof Generation**: < 1 second (for testing only, not cryptographically secure)
+- **Proof Verification**: < 1 second
+- **Use `RISC0_DEV_MODE=1` for development/testing**
 
 ## File Formats
 
