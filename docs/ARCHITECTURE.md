@@ -168,9 +168,9 @@ For complete field descriptions, validation rules, and examples, see the [formal
 
 ## Future Enhancements
 
-1. **RISC Zero Integration**: Full zkVM proof generation
-2. **IPFS Storage**: Store specs and proofs on IPFS
-3. **Signature Support**: Add cryptographic signatures to envelopes
-4. **Circuit Library**: Reusable compliance circuits
-5. **Governance**: Specification versioning and updates
+1. **IPFS Storage**: Store specs and proofs on IPFS
+2. **Signature Support**: Add cryptographic signatures to envelopes
+3. **Circuit Library**: Reusable compliance circuits
+4. **Governance**: Specification versioning and updates
+5. **Performance Optimization**: GPU acceleration, proof batching, and faster generation times
 

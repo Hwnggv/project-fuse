@@ -10,7 +10,7 @@ Project FUSE defines a standard cryptographic artifact — the Verifiable Compli
 
 ## Status
 
-Early PoC — software-only, open-source, standards-focused.
+Early-stage open-source project building the standard for verifiable compliance proofs.
 
 **MVP Status**: ✅ Complete - Ready for demonstration and early adoption. See [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for details.
 
@@ -91,7 +91,7 @@ ProjectFuse/
 
 ## License
 
-[To be determined - open source]
+Open source license (TBD)
 
 ## Specification
 

@@ -113,7 +113,7 @@ When you run `fuse-verify`, you'll see:
 
 - Read the [Architecture Documentation](ARCHITECTURE.md) to understand how VCE works
 - Create your own compliance specifications
-- Integrate RISC Zero for production zero-knowledge proofs
+- Configure RISC Zero for production use (see [Architecture Documentation](ARCHITECTURE.md))
 - Contribute checkers for additional compliance standards
 
 ## Troubleshooting
