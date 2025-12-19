@@ -7,6 +7,8 @@ pub mod soc2;
 pub mod gdpr;
 pub mod supply_chain;
 pub mod ml_model;
+pub mod ed25519;
+pub mod c2pa;
 
 /// Trait for compliance checkers
 pub trait ComplianceChecker {
@@ -32,6 +34,10 @@ impl CheckerRegistry {
         registry.register("GDPR".to_string(), Box::new(gdpr::GdprDataResidencyChecker));
         registry.register("Supply chain provenance".to_string(), Box::new(supply_chain::SupplyChainChecker));
         registry.register("ML model usage constraint".to_string(), Box::new(ml_model::MlModelChecker));
+        registry.register("Ed25519 signature verification".to_string(), Box::new(ed25519::Ed25519Checker));
+        registry.register("Ed25519".to_string(), Box::new(ed25519::Ed25519Checker));
+        registry.register("C2PA signature verification".to_string(), Box::new(c2pa::C2paChecker));
+        registry.register("C2PA".to_string(), Box::new(c2pa::C2paChecker));
 
         registry
     }

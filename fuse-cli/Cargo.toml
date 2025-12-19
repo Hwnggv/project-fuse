@@ -14,10 +14,29 @@ path = "src/bin/fuse-prove.rs"
 name = "fuse-verify"
 path = "src/bin/fuse-verify.rs"
 
+[[bin]]
+name = "fuse-benchmark"
+path = "src/bin/fuse-benchmark.rs"
+
+[[bin]]
+name = "generate-ed25519-test-data"
+path = "src/bin/generate-ed25519-test-data.rs"
+
+[[bin]]
+name = "generate-c2pa-test-data"
+path = "src/bin/generate-c2pa-test-data.rs"
+
 [dependencies]
 fuse-core = { path = "../fuse-core" }
 fuse-checkers = { path = "../fuse-checkers" }
 clap.workspace = true
 anyhow.workspace = true
 serde_json.workspace = true
+# For Ed25519 test data generation
+ed25519-compact = "2.0"
+hex.workspace = true
+# C2PA manifest parsing (host-side only)
+# Note: Temporarily commented out due to Rust version requirement (needs 1.88.0)
+# Will be enabled when we implement full C2PA manifest parsing
+# c2pa = { version = "0.73", default-features = false, features = ["file_io", "rust_native_crypto"] }
 

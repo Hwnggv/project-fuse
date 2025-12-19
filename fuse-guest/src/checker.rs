@@ -49,6 +49,10 @@ pub fn execute_checker() -> ComplianceResult {
         crate::checkers::supply_chain::check(&spec, &system_data)
     } else if claim.contains("ML model") || claim.contains("usage constraint") {
         crate::checkers::ml_model::check(&spec, &system_data)
+    } else if claim.contains("Ed25519") || claim.contains("signature verification") {
+        crate::checkers::ed25519::check(&spec, &system_data)
+    } else if claim.contains("C2PA") || claim.contains("C2PA signature") {
+        crate::checkers::c2pa::check(&spec, &system_data)
     } else {
         // Default: basic validation
         if !spec_json.is_empty() && !system_data_json.is_empty() {
