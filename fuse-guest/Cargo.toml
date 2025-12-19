@@ -24,4 +24,6 @@ serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
 ed25519-dalek = { version = "2.0", default-features = false }
 # Hex encoding/decoding (no_std compatible)
 hex = { version = "0.4", default-features = false }
+# SHA256 for binding (no_std compatible)
+sha2 = { version = "0.10", default-features = false }
 

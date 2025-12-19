@@ -215,13 +215,29 @@
 
 ### Deliverables
 
-- [ ] C2PA manifest parsing (host or guest)
-- [ ] C2PA signature verification in zkVM
-- [ ] Selective disclosure working (prove location without exact GPS)
-- [ ] **Performance test:** Selective disclosure overhead measurement
-- [ ] VCE format extended for C2PA claims
-- [ ] Test with real C2PA-signed image
-- [ ] Performance benchmarks (baseline vs. C2PA + selective disclosure)
+- [x] C2PA manifest parsing (host-side) ✅ **COMPLETE**
+- [x] C2PA signature verification in zkVM ✅ **COMPLETE**
+- [x] Selective disclosure working (top-level field redaction) ✅ **COMPLETE**
+- [ ] **Performance test:** Selective disclosure overhead measurement (Day 10)
+- [x] VCE format extended for C2PA claims ✅ **COMPLETE** (`disclosed_fields` in spec)
+- [x] Test with real C2PA-signed image ✅ **COMPLETE** (C.jpg from c2pa-rs fixtures)
+- [ ] Performance benchmarks (baseline vs. C2PA + selective disclosure) (Day 10)
+
+**Phase 2 (Days 6-9) Completed:**
+- ✅ Real C2PA asset extraction working (C.jpg from c2pa-rs)
+- ✅ C2PA manifest parsing on host (using `c2pa` crate + `img-parts`)
+- ✅ Selective disclosure mechanism implemented (top-level fields only)
+- ✅ Hash binding implemented (SHA256 of original claim committed)
+- ✅ Guest → Host journal communication working (JSON serialized as string)
+- ✅ End-to-end workflow tested: `fuse-prove` → `fuse-verify` with selective disclosure
+- ✅ Redacted JSON visible in proof journal (only disclosed fields appear)
+
+**Phase 2 Technical Approach:**
+- **Hybrid Test:** Using RSA-signed real C2PA asset (C.jpg) for JSON extraction, while keeping Ed25519 verification path for performance benchmarking
+- **Rationale:** Proves selective disclosure works with real C2PA data, while maintaining Ed25519 performance baseline for production
+- **Note:** In production, would use Ed25519-signed C2PA assets to align with optimized verification path
+
+**Next:** Day 10 - Performance benchmarking and JSON parsing cost measurement
 
 ---
 
@@ -522,9 +538,9 @@
 
 ---
 
-**Status:** 🟢 Phase 1 (Days 3-5) Complete - Technical Success
+**Status:** 🟢 Phase 2 (Days 6-9) In Progress - Selective Disclosure Working
 
-**Last Updated:** December 18, 2025
+**Last Updated:** December 19, 2025
 
 ---
 

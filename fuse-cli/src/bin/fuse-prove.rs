@@ -39,8 +39,19 @@ fn main() -> Result<()> {
     println!("   Version: {}", spec.version);
 
     println!("\n📊 Loading system data...");
-    let system_data = std::fs::read_to_string(&args.system)?;
-    println!("   Loaded {} bytes of system data", system_data.len());
+    let extension = args.system.extension().and_then(|s| s.to_str()).unwrap_or_default().to_lowercase();
+    let is_media = ["jpg", "jpeg", "png", "c2pa"].contains(&extension.as_str());
+
+    let system_data = if is_media && spec.claim.to_lowercase().contains("c2pa") {
+        println!("   Detected media file with C2PA claim. Extracting manifest...");
+        let c2pa_data = fuse_cli::c2pa::parse_c2pa_manifest(args.system.to_str().unwrap_or_default())
+            .map_err(|e| fuse_core::VceError::InputSerialization(e.to_string()))?;
+        let json = fuse_cli::c2pa::c2pa_data_to_json(&c2pa_data);
+        serde_json::to_string(&json).map_err(|e| fuse_core::VceError::InputSerialization(e.to_string()))?
+    } else {
+        std::fs::read_to_string(&args.system)?
+    };
+    println!("   Loaded {} bytes of processed system data", system_data.len());
 
     println!("\n⚙️  Running compliance checker...");
     let registry = CheckerRegistry::new();
