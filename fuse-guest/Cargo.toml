@@ -5,6 +5,10 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+description = "RISC Zero zkVM guest program for compliance verification"
+keywords = ["zero-knowledge", "zkvm", "risc-zero", "guest-program"]
+categories = ["cryptography"]
+readme = "README.md"
 
 [lib]
 name = "fuse_guest"
