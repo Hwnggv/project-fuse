@@ -1,9 +1,27 @@
 //! CLI tool for generating Verifiable Compliance Envelopes
 
-use clap::Parser;
-use fuse_core::{ComplianceSpec, VerifiableComplianceEnvelope, Result};
+use clap::{Parser, ValueEnum};
+use fuse_core::{ComplianceSpec, VerifiableComplianceEnvelope, Result, ProverType};
 use fuse_checkers::CheckerRegistry;
 use std::path::PathBuf;
+
+/// CLI argument representation of ProverType
+#[derive(Debug, Clone, Copy, ValueEnum)]
+enum ProverTypeArg {
+    /// Local CPU prover (default)
+    Local,
+    /// GPU-accelerated prover
+    Gpu,
+}
+
+impl From<ProverTypeArg> for ProverType {
+    fn from(arg: ProverTypeArg) -> Self {
+        match arg {
+            ProverTypeArg::Local => ProverType::Local,
+            ProverTypeArg::Gpu => ProverType::Gpu,
+        }
+    }
+}
 
 #[derive(Parser)]
 #[command(name = "fuse-prove")]
@@ -20,6 +38,13 @@ struct Args {
     /// Output path for the .vce file
     #[arg(short, long, default_value = "compliance.vce")]
     output: PathBuf,
+
+    /// Prover type to use for proof generation
+    /// 
+    /// - local: CPU-based proving (default, always available)
+    /// - gpu: GPU-accelerated proving (requires GPU hardware and --features gpu)
+    #[arg(long, default_value = "local", value_enum)]
+    prover: ProverTypeArg,
 }
 
 fn main() -> Result<()> {
@@ -65,9 +90,11 @@ fn main() -> Result<()> {
     
     // Try to generate a real RISC Zero proof
     // If it fails (e.g., guest program not built), fall back to placeholder
+    let prover_type: ProverType = args.prover.into();
     let proof = match fuse_core::zkvm::generate_proof(
         &serde_json::to_string(&spec).unwrap_or_default(),
         &system_data,
+        prover_type,
     ) {
         Ok((receipt_bytes, zk_result, journal)) => {
             println!("   ✓ Real zkVM proof generated");

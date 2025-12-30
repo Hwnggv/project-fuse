@@ -25,5 +25,6 @@ ed25519-dalek = { version = "2.0", default-features = false }
 # Hex encoding/decoding (no_std compatible)
 hex = { version = "0.4", default-features = false }
 # SHA256 for binding (no_std compatible)
+# Note: RISC Zero may optimize this internally, but API not directly exposed in 1.0
 sha2 = { version = "0.10", default-features = false }
 

@@ -10,6 +10,20 @@ use risc0_binfmt::{MemoryImage, Program};
 use bincode;
 use std::rc::Rc;
 
+/// Prover type selection for proof generation
+/// 
+/// Determines which hardware backend to use for proof generation.
+/// GPU option provides significant performance improvements but requires additional setup.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProverType {
+    /// Local CPU prover (default, always available)
+    Local,
+    /// Local GPU prover (CUDA on NVIDIA, Metal on Apple Silicon)
+    /// Requires GPU hardware and appropriate drivers
+    /// Note: Requires --features gpu to be enabled at build time
+    Gpu,
+}
+
 /// Get the guest program ELF binary
 /// Returns None if the guest program hasn't been built yet
 fn get_guest_elf() -> Option<&'static [u8]> {
@@ -38,17 +52,45 @@ fn compute_image_id(elf: &[u8]) -> Result<risc0_zkvm::sha::Digest> {
     Ok(image.compute_id())
 }
 
+/// Get prover server based on prover type
+fn get_prover_for_type(prover_type: ProverType) -> Result<Rc<dyn ProverServer>> {
+    let opts = match prover_type {
+        ProverType::Local => {
+            ProverOpts::default()
+        }
+        ProverType::Gpu => {
+            #[cfg(feature = "gpu")]
+            {
+                // GPU acceleration is handled via feature flags in risc0-zkvm
+                // The CUDA feature enables GPU support automatically
+                ProverOpts::default()
+            }
+            #[cfg(not(feature = "gpu"))]
+            {
+                return Err(VceError::ProofGenerationFailed(
+                    "GPU proving requested but 'gpu' feature is not enabled. Build with --features gpu".to_string()
+                ));
+            }
+        }
+    };
+    
+    get_prover_server(&opts)
+        .map_err(|e| VceError::ProofGenerationFailed(format!("Failed to initialize RISC Zero prover server: {}. Ensure RISC Zero toolchain is properly installed.", e)))
+}
+
 /// Generate a RISC Zero proof for a compliance check
 /// 
 /// # Arguments
 /// * `spec_json` - JSON string of the compliance specification
 /// * `system_data_json` - JSON string of the system data to verify
+/// * `prover_type` - Type of prover to use (Local or Gpu)
 /// 
 /// # Returns
 /// A tuple of (serialized receipt, journal_output, journal_bytes)
 pub fn generate_proof(
     spec_json: &str,
     system_data_json: &str,
+    prover_type: ProverType,
 ) -> Result<(Vec<u8>, JournalOutput, Vec<u8>)> {
     // Get guest program ELF binary
     let guest_elf = get_guest_elf().ok_or_else(|| {
@@ -73,10 +115,23 @@ pub fn generate_proof(
     let session = exec.run()
         .map_err(|e| VceError::GuestProgramExecution(format!("Guest program execution failed: {}. Check that inputs are valid JSON and guest program logic is correct.", e)))?;
     
-    // Get prover server
+    // Get prover server based on requested type
     // Note: Real proof generation can take 10-20+ minutes. Use RISC0_DEV_MODE=1 for faster testing.
-    let prover: Rc<dyn ProverServer> = get_prover_server(&ProverOpts::default())
-        .map_err(|e| VceError::ProofGenerationFailed(format!("Failed to initialize RISC Zero prover server: {}. Ensure RISC Zero toolchain is properly installed.", e)))?;
+    // GPU proving can reduce this significantly (5-10x faster).
+    let prover = get_prover_for_type(prover_type)?;
+    
+    // Log prover type being used
+    match prover_type {
+        ProverType::Local => {
+            println!("   Using local CPU prover");
+        }
+        ProverType::Gpu => {
+            #[cfg(feature = "gpu")]
+            println!("   Using local GPU prover (CUDA/Metal)");
+            #[cfg(not(feature = "gpu"))]
+            println!("   GPU prover requested but feature not enabled");
+        }
+    }
     
     // Generate proof (this is the computationally expensive step)
     let ctx = VerifierContext::default();

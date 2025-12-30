@@ -70,6 +70,8 @@ pub fn check(spec: &Value, system_data: &Value) -> JournalOutput {
     };
 
     // Hash the original raw claim bytes
+    // Note: RISC Zero 1.0 doesn't expose guest::sha::sha256 directly
+    // Using sha2 crate which RISC Zero may optimize internally
     let mut hasher = Sha256::new();
     hasher.update(&message_bytes);
     let claim_hash = hasher.finalize().to_vec();

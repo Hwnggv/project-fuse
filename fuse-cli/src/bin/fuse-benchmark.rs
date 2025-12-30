@@ -4,7 +4,7 @@
 //! to establish baseline performance and compare with Ed25519 verification.
 
 use clap::Parser;
-use fuse_core::zkvm;
+use fuse_core::{zkvm, ProverType};
 use serde_json::json;
 use std::fs;
 use std::time::Instant;
@@ -76,7 +76,7 @@ fn main() -> anyhow::Result<()> {
         println!("Running iteration {}/{}...", i, args.iterations);
         let start = Instant::now();
 
-        match zkvm::generate_proof(&spec_json, &system_json) {
+        match zkvm::generate_proof(&spec_json, &system_json, ProverType::Local) {
             Ok((_receipt_bytes, result, _journal_bytes)) => {
                 let duration = start.elapsed();
                 let duration_secs = duration.as_secs_f64();

@@ -94,7 +94,7 @@ mod tests {
             vec![],
         );
 
-        let envelope = VerifiableComplianceEnvelope::new(spec, proof);
+        let mut envelope = VerifiableComplianceEnvelope::new(spec, proof);
         assert!(envelope.verify().is_ok());
     }
 }
