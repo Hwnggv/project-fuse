@@ -1,18 +1,17 @@
 #![no_main]
 use libfuzzer_sys::fuzz_target;
 use fuse_core::ComplianceSpec;
-use fuse_checkers::ed25519::Ed25519Checker;
+use fuse_checkers::{ComplianceChecker, ed25519::Ed25519Checker};
 use serde_json::json;
 use std::collections::BTreeMap;
 use chrono::Utc;
 
-/// Fuzz target for Ed25519 signature verification
-/// 
-/// Tests Ed25519 signature verification with random inputs to catch:
-/// - Replay attacks (same signature with different messages)
-/// - Poisoned inputs (malformed keys/signatures)
-/// - Memory safety issues
-/// - Side-channel leaks (though RISC Zero handles this)
+// Fuzz target for Ed25519 signature verification
+// Tests Ed25519 signature verification with random inputs to catch:
+// - Replay attacks (same signature with different messages)
+// - Poisoned inputs (malformed keys/signatures)
+// - Memory safety issues
+// - Side-channel leaks (though RISC Zero handles this)
 fuzz_target!(|data: &[u8]| {
     // Ensure we have enough data for key (32 bytes) + signature (64 bytes) + message
     if data.len() < 96 {

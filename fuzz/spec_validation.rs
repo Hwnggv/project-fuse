@@ -2,14 +2,13 @@
 use libfuzzer_sys::fuzz_target;
 use fuse_core::ComplianceSpec;
 
-/// Fuzz target for compliance spec validation
-/// 
-/// Tests that spec parsing and validation handles malformed inputs gracefully:
-/// - Invalid JSON
-/// - Missing required fields
-/// - Invalid field types
-/// - Malformed dates/timestamps
-/// - Extremely large inputs
+// Fuzz target for compliance spec validation
+// Tests that spec parsing and validation handles malformed inputs gracefully:
+// - Invalid JSON
+// - Missing required fields
+// - Invalid field types
+// - Malformed dates/timestamps
+// - Extremely large inputs
 fuzz_target!(|data: &[u8]| {
     // Try to parse as JSON spec
     if let Ok(json_value) = serde_json::from_slice::<serde_json::Value>(data) {

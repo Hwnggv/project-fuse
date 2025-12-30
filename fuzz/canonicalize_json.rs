@@ -1,10 +1,9 @@
 #![no_main]
 use libfuzzer_sys::fuzz_target;
 
-/// Fuzz target for JSON canonicalization
-/// 
-/// Tests that serde_json can handle random JSON inputs without panicking
-/// and that canonicalization doesn't leak information or crash on malformed data.
+// Fuzz target for JSON canonicalization
+// Tests that serde_json can handle random JSON inputs without panicking
+// and that canonicalization doesn't leak information or crash on malformed data.
 fuzz_target!(|data: &[u8]| {
     // Try to parse as JSON
     if let Ok(json_value) = serde_json::from_slice::<serde_json::Value>(data) {

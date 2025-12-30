@@ -1,13 +1,12 @@
 #![no_main]
 use libfuzzer_sys::fuzz_target;
 
-/// Fuzz target for Borsh deserialization
-/// 
-/// Tests Borsh deserialization used by RISC Zero for journal decoding.
-/// This helps catch issues with:
-/// - Malformed journal data
-/// - Buffer overflows
-/// - Memory safety issues
+// Fuzz target for Borsh deserialization
+// Tests Borsh deserialization used by RISC Zero for journal decoding.
+// This helps catch issues with:
+// - Malformed journal data
+// - Buffer overflows
+// - Memory safety issues
 fuzz_target!(|data: &[u8]| {
     // Try to deserialize as JournalOutput structure
     // Note: This is a simplified test - actual journal format is RISC Zero specific

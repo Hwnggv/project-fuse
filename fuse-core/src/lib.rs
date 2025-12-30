@@ -11,7 +11,7 @@ pub mod zkvm;
 
 pub use spec::ComplianceSpec;
 pub use envelope::VerifiableComplianceEnvelope;
-pub use proof::{ComplianceProof, ComplianceResult};
+pub use proof::{ComplianceProof, ComplianceResult, JournalOutput};
 pub use error::{VceError, Result};
 pub use zkvm::ProverType;
 

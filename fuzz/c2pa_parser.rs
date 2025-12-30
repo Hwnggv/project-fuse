@@ -2,10 +2,9 @@
 use libfuzzer_sys::fuzz_target;
 use fuse_cli::c2pa::parse_c2pa_manifest;
 
-/// Fuzz target for C2PA manifest parsing
-/// 
-/// Tests that C2PA parser handles corrupted/random payloads gracefully
-/// without panicking or leaking data on invalid inputs.
+// Fuzz target for C2PA manifest parsing
+// Tests that C2PA parser handles corrupted/random payloads gracefully
+// without panicking or leaking data on invalid inputs.
 fuzz_target!(|data: &[u8]| {
     // Create a temporary file with fuzzed data
     let temp_file = std::env::temp_dir().join(format!("fuzz_c2pa_{}.jpg", std::process::id()));
