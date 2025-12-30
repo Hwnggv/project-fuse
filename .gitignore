@@ -17,6 +17,16 @@ compliance.vce
 output/
 test*.vce
 
+# Benchmark and test output files
+*-benchmark*.json
+*-benchmark*.txt
+*-output.txt
+*-results.json
+baseline-*
+c2pa-benchmark-*
+ed25519-*.txt
+json-only-benchmark.json
+
 # RISC Zero specific
 # Note: Guest ELF binaries are large and should not be committed
 # They are built from source and can be regenerated

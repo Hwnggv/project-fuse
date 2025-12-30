@@ -2,7 +2,7 @@
 
 **Tagline:** "The checksum for compliance — portable, machine-verifiable assurance."
 
-![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)
+![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)
 ![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![Specification](https://img.shields.io/badge/spec-VCE%20v0.1-green.svg)
 ![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)
@@ -94,10 +94,6 @@ ProjectFuse/
 | Phase 3 | Q2-Q3 2026 | Performance optimization | GPU acceleration, proof batching, < 5 minute generation |
 | Phase 4 | Q4 2026 | Ecosystem expansion | Auditor tools, governance framework, enterprise features |
 
-## License
-
-Open source license (TBD)
-
 ## Specification
 
 **VCE Specification v0.1** is now published as an open standard:
@@ -138,9 +134,13 @@ make coverage
 
 See [docs/TESTING.md](docs/TESTING.md) for detailed testing information.
 
+## License
+
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+
 ## Contributing
 
-This is an early-stage PoC. Contributions welcome!
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to Project FUSE.
 
 ## Note on Zero-Knowledge Proofs
 

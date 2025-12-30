@@ -75,8 +75,9 @@ pub fn parse_c2pa_manifest(manifest_path: &str) -> Result<C2paSignatureData> {
     // 1. Use the full claim JSON as the 'message'
     // 2. Use a mock signature for now if we can't extract it easily
     // 
-    // TODO: Implement exact byte extraction for c2pa.claim and c2pa.signature
-    // for Phase 2 "real" verification.
+    // Note: Current implementation uses full claim JSON as message.
+    // For production use, exact byte extraction for c2pa.claim and c2pa.signature
+    // should be implemented to match C2PA specification exactly.
     
     // Use valid-length hex dummies for the hybrid test
     let public_key = hex::encode([0u8; 32]); 
