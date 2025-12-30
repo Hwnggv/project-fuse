@@ -4,6 +4,8 @@
 //! sets up the environment for including it in the host program.
 
 fn main() {
+    // Tell cargo to accept this cfg
+    println!("cargo:rustc-check-cfg=cfg(guest_program_built)");
     // Check if guest program ELF exists
     // Try workspace target directory first (default for cargo workspaces)
     let guest_elf_paths = [
