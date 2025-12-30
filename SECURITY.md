@@ -72,7 +72,12 @@ Include the following information:
 ### Zero-Knowledge Proofs
 
 - **Dev Mode**: `RISC0_DEV_MODE=1` generates non-cryptographic proofs for testing only
+  - ⚠️ **NOT side-channel resistant** - use only for development/testing
+  - ⚠️ **NOT cryptographically secure** - do not use in production
 - **Real Proofs**: Production use requires real zkVM proofs (10-20+ minutes generation time)
+  - ✅ Uses RISC Zero's secure, audited implementation
+  - ✅ Side-channel resistant
+  - ✅ Cryptographically secure
 - **Verification**: Always verify proofs cryptographically before trusting results
 
 ### C2PA Integration
@@ -80,12 +85,37 @@ Include the following information:
 - C2PA signature verification is performed in the zkVM
 - Tampered manifests will fail verification
 - Invalid signatures are detected and reported
+- **Selective disclosure**: Sensitive fields can be redacted via `disclosed_fields` in spec
 
 ### Guest Program
 
 - The guest program runs in an isolated zkVM environment
 - Guest code is deterministic and verifiable
 - No network access or side effects from guest execution
+- Relies on RISC Zero's secure implementation for cryptographic operations
+
+## Known Limitations
+
+| Issue | Mitigation | Impact | Status |
+|-------|------------|--------|--------|
+| Dev mode not side-channel resistant | Use real proofs in production | Low (dev mode for testing only) | Documented |
+| GPU linking issue (sppark) | CPU proving works fine | Low (performance optimization, not blocker) | Documented |
+| RSA timing sidechannel (transitive via c2pa) | We use Ed25519, RSA only in c2pa parser | Low (no direct exposure) | Monitored |
+| tracing-subscriber log poisoning (transitive) | Requires RISC Zero update | Low (only affects logging) | Monitored |
+| No explicit timestamp freshness check | Relies on spec expiry | Low (acceptable for most use cases) | Documented |
+
+**Note**: See `docs/SECURITY_REVIEW.md` for complete security review and detailed analysis.
+
+## Security Status
+
+**Current Status**: Pre-audit dev version
+
+- ✅ Internal security review completed (Phase 3)
+- ✅ Dependency scanning completed (`cargo audit`)
+- ✅ Fuzzing infrastructure in place
+- ⏳ External audit pending (see `docs/EXTERNAL_AUDIT_OPTIONS.md`)
+
+**For Pilots**: Use "Pre-audit dev version" disclaimer. External audit recommended before production contracts.
 
 ## Security Updates
 

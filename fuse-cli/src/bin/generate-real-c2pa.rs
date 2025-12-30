@@ -69,8 +69,8 @@ fn main() -> anyhow::Result<()> {
     // Create CA
     let mut ca_params = CertificateParams::default();
     ca_params.distinguished_name = DistinguishedName::new();
-    ca_params.distinguished_name.push(rcgen::DnType::CommonName, "Witness Test CA");
-    ca_params.distinguished_name.push(rcgen::DnType::OrganizationName, "Witness");
+    ca_params.distinguished_name.push(rcgen::DnType::CommonName, "FUSE Test CA");
+    ca_params.distinguished_name.push(rcgen::DnType::OrganizationName, "FUSE");
     ca_params.distinguished_name.push(rcgen::DnType::CountryName, "US");
     ca_params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
     ca_params.key_usages = vec![KeyUsagePurpose::KeyCertSign, KeyUsagePurpose::DigitalSignature];
@@ -82,8 +82,8 @@ fn main() -> anyhow::Result<()> {
     let ee_keypair = KeyPair::generate_for(&rcgen::PKCS_ED25519)?;
     let mut ee_params = CertificateParams::default();
     ee_params.distinguished_name = DistinguishedName::new();
-    ee_params.distinguished_name.push(rcgen::DnType::CommonName, "Witness Test EE");
-    ee_params.distinguished_name.push(rcgen::DnType::OrganizationName, "Witness");
+    ee_params.distinguished_name.push(rcgen::DnType::CommonName, "FUSE Test EE");
+    ee_params.distinguished_name.push(rcgen::DnType::OrganizationName, "FUSE");
     ee_params.distinguished_name.push(rcgen::DnType::CountryName, "US");
     ee_params.key_usages = vec![KeyUsagePurpose::DigitalSignature];
     
@@ -102,9 +102,9 @@ fn main() -> anyhow::Result<()> {
 
     // 3. Create a C2PA manifest definition
     let manifest_json = json!({
-        "title": "Witness Test Image",
+        "title": "FUSE Test Image",
         "format": "application/c2pa",
-        "claim_generator": "witness-test",
+        "claim_generator": "fuse-test",
         "assertions": [
             {
                 "label": "c2pa.test",

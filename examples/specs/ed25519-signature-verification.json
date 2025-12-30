@@ -9,7 +9,7 @@
   "version": "1.0",
   "expiry": "2099-12-31T23:59:59Z",
   "metadata": {
-    "purpose": "Performance benchmark for Witness Spike Day 1-2",
+    "purpose": "Performance benchmark for Ed25519 signature verification",
     "note": "This is a minimal spec for testing Ed25519 signature verification in zkVM"
   }
 }

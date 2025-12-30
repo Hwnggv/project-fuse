@@ -5,6 +5,9 @@ members = [
     "fuse-checkers",
     "fuse-guest",
 ]
+exclude = [
+    "fuzz",
+]
 resolver = "2"
 
 [workspace.package]

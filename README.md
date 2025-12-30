@@ -132,7 +132,26 @@ Measure coverage:
 make coverage
 ```
 
+Run security checks:
+```bash
+make audit          # Dependency vulnerability scan
+make lint-security  # Security-focused clippy checks
+```
+
 See [docs/TESTING.md](docs/TESTING.md) for detailed testing information.
+
+## Security
+
+**Status**: Pre-audit dev version (internal security review completed)
+
+- ✅ Dependency scanning (`cargo audit`)
+- ✅ Fuzzing infrastructure (5 targets)
+- ✅ Internal security review completed
+- ⏳ External audit pending
+
+See [SECURITY.md](SECURITY.md) for security policy and [docs/SECURITY_REVIEW.md](docs/SECURITY_REVIEW.md) for detailed security analysis.
+
+**For Pilots**: Use "Pre-audit dev version" disclaimer until external audit completed.
 
 ## License
 

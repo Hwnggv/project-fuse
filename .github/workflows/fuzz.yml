@@ -1,0 +1,53 @@
+name: Fuzzing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run fuzzing nightly
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  fuzz:
+    name: Fuzz ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - canonicalize_json
+          - c2pa_parser
+          - ed25519_verification
+          - spec_validation
+          - borsh_decode
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      
+      - name: Install cargo-fuzz
+        run: cargo install cargo-fuzz --locked
+      
+      - name: Run fuzzer
+        run: |
+          cd fuzz
+          cargo fuzz run ${{ matrix.target }} --fuzz-time 3600s -- -max_total_time=3600
+        env:
+          RUST_BACKTRACE: 1
+          RISC0_DEV_MODE: 1
+      
+      - name: Upload crashes
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-crashes-${{ matrix.target }}
+          path: fuzz/fuzz_targets/${{ matrix.target }}/crashes/
+          if-no-files-found: ignore

@@ -1,11 +1,11 @@
 //! RISC Zero zkVM proof generation and verification (1.0+ API)
 
 use crate::error::{VceError, Result};
-use crate::proof::{ComplianceResult, JournalOutput};
+use crate::proof::JournalOutput;
 use risc0_zkvm::{
     ExecutorEnv, ExecutorImpl, get_prover_server, ProverOpts, ProverServer, Receipt, VerifierContext,
 };
-use risc0_zkvm::serde::{from_slice, to_vec};
+use risc0_zkvm::serde::to_vec;
 use risc0_binfmt::{MemoryImage, Program};
 use bincode;
 use std::rc::Rc;

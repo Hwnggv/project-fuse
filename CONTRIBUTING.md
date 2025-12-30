@@ -125,6 +125,38 @@ Explain what and why, not how.
 
 By contributing to Project FUSE, you agree that your contributions will be licensed under the Apache License 2.0.
 
+## Important: Open Source Only
+
+**Project FUSE is open-source software (Apache 2.0).**
+
+### What Belongs in FUSE (OSS)
+
+- ✅ Core VCE protocol implementation
+- ✅ Zero-knowledge proof generation and verification
+- ✅ Compliance checker framework
+- ✅ CLI tools and utilities
+- ✅ Documentation and examples
+- ✅ Test fixtures and test data
+- ✅ Open standards and specifications
+
+### What Does NOT Belong in FUSE (Proprietary)
+
+- ❌ Business-specific logic or integrations
+- ❌ Proprietary algorithms or trade secrets
+- ❌ Customer-specific configurations or data
+- ❌ Commercial/proprietary features
+- ❌ Internal business plans or strategies
+- ❌ Proprietary products built on top of FUSE (keep those in separate repositories)
+
+### Separation Principle
+
+FUSE provides the **open-source foundation** (protocol, proof generation, verification). Proprietary products should be built **on top of** FUSE as separate repositories/products, not within FUSE itself.
+
+**If you're unsure whether something belongs in FUSE:**
+- Ask yourself: "Would this be useful to anyone building on FUSE?"
+- If it's business-specific or proprietary, it belongs in a separate repository
+- When in doubt, open an issue to discuss
+
 ## Questions?
 
 - Open an issue for questions or discussions

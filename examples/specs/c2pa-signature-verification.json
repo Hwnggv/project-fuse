@@ -10,7 +10,7 @@
   "version": "1.0",
   "expiry": "2099-12-31T23:59:59Z",
   "metadata": {
-    "purpose": "C2PA signature verification for Witness Spike Phase 1",
+    "purpose": "C2PA signature verification example",
     "note": "Verifies Ed25519 signatures from C2PA manifests"
   }
 }

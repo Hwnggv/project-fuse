@@ -210,10 +210,70 @@ For complete field descriptions, validation rules, and examples, see the [formal
 
 ## Security Considerations
 
+### Core Security Properties
+
 1. **Spec Expiry**: All specs must have expiry dates
 2. **Hash Verification**: Proof spec hash must match spec hash
 3. **Proof Verification**: All proofs must be cryptographically verified
 4. **System Hash**: System being verified is identified by hash
+
+### Cryptographic Security
+
+**Side-Channel Resistance**:
+- Core cryptographic operations use well-audited libraries (`ed25519-dalek`, `sha2`)
+- Real proofs use RISC Zero's secure, audited zkVM implementation
+- **Dev mode (`RISC0_DEV_MODE=1`) is NOT side-channel resistant** - use only for testing
+- Production use requires real proofs (10-20+ minutes generation time)
+
+**Replay Attack Protection**:
+- Proofs include unique timestamps (`chrono::DateTime<chrono::Utc>`)
+- Spec expiry provides time-bound validation
+- Spec hash verification prevents spec substitution
+- See `docs/SECURITY_REVIEW.md` for detailed analysis
+
+### Privacy and Selective Disclosure
+
+**Zero-Knowledge Properties**:
+- Proofs don't contain original data (only hashes and redacted fields)
+- Original system data never stored in proof
+- Selective disclosure allows redaction of sensitive fields via `disclosed_fields` in spec
+
+**GDPR Compliance**:
+- **No data retention**: Proofs don't contain personal data
+- **Data minimization**: Only disclosed fields in journal
+- **Purpose limitation**: Proofs only prove compliance, don't reveal data
+- **No network calls**: Proofs are portable, offline verification
+- **Isolated execution**: Guest program runs in isolated zkVM environment
+
+**Selective Disclosure Implementation**:
+- Fields specified in `spec.disclosed_fields` are included in journal
+- All other fields are excluded from `JournalOutput.redacted_json`
+- Original claim hash (`claim_hash`) binds redacted output to original
+- Redaction happens in zkVM (verifiable, no trust in host)
+
+### Input Validation
+
+- All parsers use `Result` types (panic-free error handling)
+- Invalid inputs return errors gracefully
+- Bounds checking on all user inputs
+- Malformed JSON handled without panics
+
+### Memory Safety
+
+- No `unsafe` blocks in core codebase
+- All memory operations use safe Rust APIs
+- Bounds checking on all array accesses
+- Well-audited dependencies (serde, sha2, ed25519-dalek, RISC Zero)
+
+### Known Limitations
+
+See `docs/SECURITY_REVIEW.md` for complete security review and known limitations table.
+
+**Key Points**:
+- Dev mode is for testing only (not cryptographically secure)
+- GPU linking issue documented (CPU proving works fine)
+- Some transitive dependencies have known issues (low risk, no direct exposure)
+- External audit pending (see Phase 3 plan)
 
 ## Future Enhancements
 
