@@ -24,19 +24,34 @@ chrono = "0.4"
 [[bin]]
 name = "canonicalize_json"
 path = "fuzz_targets/canonicalize_json.rs"
+test = false
+doc = false
+bench = false
 
 [[bin]]
 name = "c2pa_parser"
 path = "fuzz_targets/c2pa_parser.rs"
+test = false
+doc = false
+bench = false
 
 [[bin]]
 name = "ed25519_verification"
 path = "fuzz_targets/ed25519_verification.rs"
+test = false
+doc = false
+bench = false
 
 [[bin]]
 name = "spec_validation"
 path = "fuzz_targets/spec_validation.rs"
+test = false
+doc = false
+bench = false
 
 [[bin]]
 name = "borsh_decode"
 path = "fuzz_targets/borsh_decode.rs"
+test = false
+doc = false
+bench = false
