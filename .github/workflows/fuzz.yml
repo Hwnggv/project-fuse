@@ -2,9 +2,9 @@ name: Fuzzing
 
 on:
   push:
-    branches: [ main, oss-cleanup-and-setup ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, oss-cleanup-and-setup ]
+    branches: [ main ]
   schedule:
     # Run fuzzing nightly
     - cron: '0 2 * * *'
