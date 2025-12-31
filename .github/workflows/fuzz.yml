@@ -51,12 +51,7 @@ jobs:
       - name: Run fuzz target
         run: |
           cd fuzz
-          # Only build ed25519_verification with the heavy deps
-          if [ "${{ matrix.target }}" = "ed25519_verification" ]; then
-            cargo fuzz run ${{ matrix.target }} --features ed25519 -- -runs=10
-          else
-            cargo fuzz run ${{ matrix.target }} -- -runs=10
-          fi
+          cargo fuzz run ${{ matrix.target }} -- -runs=10
         env:
           RUST_BACKTRACE: 1
           RISC0_DEV_MODE: 1
