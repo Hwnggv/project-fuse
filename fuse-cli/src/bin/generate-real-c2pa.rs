@@ -69,8 +69,8 @@ fn main() -> anyhow::Result<()> {
     // Create CA
     let mut ca_params = CertificateParams::default();
     ca_params.distinguished_name = DistinguishedName::new();
-    ca_params.distinguished_name.push(rcgen::DnType::CommonName, "Witness Test CA");
-    ca_params.distinguished_name.push(rcgen::DnType::OrganizationName, "Witness");
+    ca_params.distinguished_name.push(rcgen::DnType::CommonName, "FUSE Test CA");
+    ca_params.distinguished_name.push(rcgen::DnType::OrganizationName, "FUSE");
     ca_params.distinguished_name.push(rcgen::DnType::CountryName, "US");
     ca_params.is_ca = IsCa::Ca(BasicConstraints::Unconstrained);
     ca_params.key_usages = vec![KeyUsagePurpose::KeyCertSign, KeyUsagePurpose::DigitalSignature];
@@ -82,8 +82,8 @@ fn main() -> anyhow::Result<()> {
     let ee_keypair = KeyPair::generate_for(&rcgen::PKCS_ED25519)?;
     let mut ee_params = CertificateParams::default();
     ee_params.distinguished_name = DistinguishedName::new();
-    ee_params.distinguished_name.push(rcgen::DnType::CommonName, "Witness Test EE");
-    ee_params.distinguished_name.push(rcgen::DnType::OrganizationName, "Witness");
+    ee_params.distinguished_name.push(rcgen::DnType::CommonName, "FUSE Test EE");
+    ee_params.distinguished_name.push(rcgen::DnType::OrganizationName, "FUSE");
     ee_params.distinguished_name.push(rcgen::DnType::CountryName, "US");
     ee_params.key_usages = vec![KeyUsagePurpose::DigitalSignature];
     
@@ -93,7 +93,7 @@ fn main() -> anyhow::Result<()> {
     
     // Extract the public key raw bytes for reference
     let pub_key_bytes = ee_keypair.public_key_raw();
-    println!("Generated Ed25519 public key: {}", hex::encode(&pub_key_bytes));
+    println!("Generated Ed25519 public key: {}", hex::encode(pub_key_bytes));
 
     // Create a signing key for the signer
     let pkcs8_der = ee_keypair.serialize_der();
@@ -102,9 +102,9 @@ fn main() -> anyhow::Result<()> {
 
     // 3. Create a C2PA manifest definition
     let manifest_json = json!({
-        "title": "Witness Test Image",
+        "title": "FUSE Test Image",
         "format": "application/c2pa",
-        "claim_generator": "witness-test",
+        "claim_generator": "fuse-test",
         "assertions": [
             {
                 "label": "c2pa.test",
@@ -138,7 +138,7 @@ fn main() -> anyhow::Result<()> {
     
     // Save the public key separately for reference
     let pub_key_path = output_path.join("test_pub_key.hex");
-    fs::write(&pub_key_path, hex::encode(&pub_key_bytes))?;
+    fs::write(&pub_key_path, hex::encode(pub_key_bytes))?;
     println!("Saved public key to: {:?}", pub_key_path);
 
     Ok(())

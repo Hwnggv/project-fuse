@@ -5,6 +5,10 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+description = "Compliance checker implementations for VCE protocol"
+keywords = ["compliance", "checkers", "verification"]
+categories = ["cryptography"]
+readme = "README.md"
 
 [dependencies]
 fuse-core = { path = "../fuse-core" }

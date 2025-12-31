@@ -5,6 +5,10 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+description = "Core VCE protocol implementation for verifiable compliance proofs"
+keywords = ["zero-knowledge", "compliance", "verification", "zkvm", "risc-zero"]
+categories = ["cryptography", "authentication"]
+readme = "README.md"
 build = "build.rs"
 
 [features]

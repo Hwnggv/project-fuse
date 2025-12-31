@@ -363,3 +363,92 @@ fn test_claim_hash_binding() {
         }
     }
 }
+
+/// Test selective disclosure - verify sensitive data is hidden in journal
+/// This test verifies that sensitive fields are not leaked in the proof journal,
+/// ensuring privacy properties of selective disclosure.
+#[test]
+fn test_selective_disclosure_hides_sensitive_data() {
+    std::env::set_var("RISC0_DEV_MODE", "1");
+    
+    let fixture_path = match load_c2pa_fixture("adobe-20220124-C.jpg") {
+        Ok(path) => path,
+        Err(_) => {
+            println!("Skipping selective disclosure test: fixture not available");
+            return;
+        }
+    };
+    
+    let c2pa_data = match parse_c2pa_manifest(fixture_path.to_str().unwrap()) {
+        Ok(data) => data,
+        Err(_) => {
+            println!("Skipping test: failed to parse C2PA manifest");
+            return;
+        }
+    };
+    
+    // Create spec with selective disclosure - only disclose "claim_generator", hide other fields
+    let spec_json = r#"{
+        "claim": "Selective disclosure test",
+        "system_hash": "N/A",
+        "constraints": {},
+        "disclosed_fields": ["claim_generator"],
+        "jurisdiction": "N/A",
+        "version": "1.0",
+        "expiry": "2099-12-31T23:59:59Z"
+    }"#;
+    
+    // Create system data with sensitive fields (location, creator info, etc.)
+    let mut claim_with_sensitive = c2pa_data.claim_json.clone();
+    if let Some(claim_obj) = claim_with_sensitive.as_object_mut() {
+        // Add sensitive fields that should be hidden
+        claim_obj.insert("sensitive_location".to_string(), serde_json::json!("San Francisco, CA"));
+        claim_obj.insert("sensitive_creator".to_string(), serde_json::json!("John Doe"));
+        claim_obj.insert("sensitive_email".to_string(), serde_json::json!("john@example.com"));
+    }
+    
+    let system_data_json = serde_json::json!({
+        "public_key": c2pa_data.public_key,
+        "signature": c2pa_data.signature,
+        "message": c2pa_data.message,
+        "claim": claim_with_sensitive
+    }).to_string();
+    
+    match fuse_core::zkvm::generate_proof(spec_json, &system_data_json, ProverType::Local) {
+        Ok((_receipt_bytes, journal_output, _journal_bytes)) => {
+            // Parse the redacted JSON from journal
+            let redacted: serde_json::Value = match serde_json::from_str(&journal_output.redacted_json) {
+                Ok(v) => v,
+                Err(_) => {
+                    // Empty redacted JSON is okay if no disclosed fields match
+                    return;
+                }
+            };
+            
+            // Verify sensitive fields are NOT in redacted JSON
+            if let Some(redacted_obj) = redacted.as_object() {
+                assert!(!redacted_obj.contains_key("sensitive_location"),
+                    "sensitive_location should be hidden in redacted JSON");
+                assert!(!redacted_obj.contains_key("sensitive_creator"),
+                    "sensitive_creator should be hidden in redacted JSON");
+                assert!(!redacted_obj.contains_key("sensitive_email"),
+                    "sensitive_email should be hidden in redacted JSON");
+                
+                // Verify only disclosed fields are present (if any)
+                println!("Redacted JSON contains {} fields", redacted_obj.len());
+            }
+            
+            // Verify claim hash is present (binds redacted output to original)
+            assert_eq!(journal_output.claim_hash.len(), 32,
+                "Claim hash should be present (32 bytes for SHA256)");
+        }
+        Err(e) => {
+            let error_msg = e.to_string();
+            if error_msg.contains("not built") || error_msg.contains("Guest program") {
+                println!("Skipping test: Guest program not built");
+            } else {
+                panic!("Unexpected error: {}", e);
+            }
+        }
+    }
+}

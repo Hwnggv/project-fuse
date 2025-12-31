@@ -5,6 +5,10 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+description = "Command-line tools for generating and verifying VCE compliance proofs"
+keywords = ["zero-knowledge", "compliance", "cli", "verification"]
+categories = ["command-line-utilities", "cryptography"]
+readme = "README.md"
 
 [[bin]]
 name = "fuse-prove"

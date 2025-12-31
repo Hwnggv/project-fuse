@@ -5,14 +5,17 @@ members = [
     "fuse-checkers",
     "fuse-guest",
 ]
+exclude = [
+    "fuzz",
+]
 resolver = "2"
 
 [workspace.package]
 version = "1.1.0"
 edition = "2021"
 authors = ["Project FUSE Contributors"]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/projectfuse/vce-protocol"
+license = "Apache-2.0"
+repository = "https://github.com/Mikebrown0409/project-fuse"
 
 [workspace.dependencies]
 # Core dependencies

@@ -194,12 +194,55 @@ If coverage fails:
 5. **Informative errors**: Error messages should help debug issues
 6. **Coverage first**: Aim for 80%+ coverage before adding features
 
+## Security Testing
+
+### Security Audit
+
+Run dependency vulnerability scan and security checks:
+
+```bash
+# Full security audit (cargo-audit, clippy, semgrep)
+make audit
+
+# Or run script directly
+bash scripts/security-audit.sh
+
+# Security-focused clippy checks
+make lint-security
+```
+
+### Fuzzing
+
+Fuzzing tests are available in the `fuzz/` directory. See [docs/FUZZING.md](FUZZING.md) for detailed fuzzing guide.
+
+**Quick start:**
+```bash
+# Install cargo-fuzz (if not already installed)
+cargo install cargo-fuzz --locked
+
+# List available fuzz targets
+cd fuzz && cargo fuzz list
+
+# Run a specific fuzz target
+cargo fuzz run canonicalize_json --fuzz-time 3600s
+```
+
+**Available fuzz targets:**
+- `canonicalize_json` - JSON parsing and canonicalization
+- `c2pa_parser` - C2PA manifest parsing
+- `ed25519_verification` - Ed25519 signature verification
+- `spec_validation` - Compliance spec validation
+- `borsh_decode` - Journal deserialization
+
+Fuzzing runs automatically in CI via GitHub Actions (see `.github/workflows/fuzz.yml`).
+
 ## CI/CD Integration
 
 Tests should run in CI with:
 - Dev mode enabled for speed
 - All test suites executed
 - Coverage measurement
+- Security audit
 - Guest program built if possible
 
 Example CI configuration:
@@ -209,4 +252,12 @@ Example CI configuration:
   
 - name: Measure coverage
   run: bash scripts/coverage.sh
+
+- name: Security audit
+  run: make audit
+
+- name: Run fuzzing
+  run: |
+    cargo install cargo-fuzz --locked
+    cd fuzz && cargo fuzz run canonicalize_json --fuzz-time 3600s
 ```

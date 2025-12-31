@@ -1,140 +1,73 @@
-# Witness Demo: Selective Disclosure of C2PA Manifests
+# C2PA Selective Disclosure Demo
 
-This demo demonstrates the core value proposition of Witness: **cryptographically proving that a full C2PA manifest was verified, while only revealing a small, chosen subset of fields**.
+This demo demonstrates selective disclosure of C2PA manifests: **cryptographically proving that a full C2PA manifest was verified, while only revealing a small, chosen subset of fields**.
 
 ## What This Demo Shows
 
-1. **Full Manifest Extraction**: Extracts the complete C2PA manifest from a signed image
-2. **Selective Disclosure**: Generates a zero-knowledge proof that verifies the full manifest, but only commits selected fields to the public proof journal
-3. **Cryptographic Binding**: Shows how the redacted output is cryptographically bound to the original manifest via SHA256 hash
-4. **Public Verification**: Demonstrates that anyone can verify the proof without access to the original image or hidden data
+- Parse a C2PA manifest from a JPEG image
+- Generate a zero-knowledge proof that verifies the full manifest
+- Only disclose selected fields in the proof journal (privacy-preserving)
+- Verify the proof cryptographically
 
-## Prerequisites
+## Running the Demo
 
-- **Rust & Cargo**: Installed and up-to-date
-- **Guest Program Built**: The RISC Zero guest program must be compiled:
-  ```bash
-  cargo build --release --package fuse-guest --target riscv32im-risc0-zkvm-elf
-  ```
-- **C2PA Asset**: A C2PA-signed image (default: `examples/c2pa/C.jpg`)
-
-## How to Run
-
-From the project root directory:
+From the project root:
 
 ```bash
-./examples/demo-witness.sh
+./examples/demo-c2pa-selective-disclosure.sh
 ```
 
-Or with explicit paths:
+Or from the `examples/` directory:
 
 ```bash
 cd examples
-./demo-witness.sh
+./demo-c2pa-selective-disclosure.sh
 ```
 
-## What to Expect
+## How It Works
 
-The demo will:
+1. **Parse C2PA Manifest**: Extracts signature data from a C2PA-signed JPEG
+2. **Generate Proof**: Creates a zkVM proof that verifies the entire manifest
+3. **Selective Disclosure**: Only specified fields appear in the proof journal
+4. **Verify**: Cryptographically verifies the proof
 
-1. **Extract the full manifest** (~30 seconds)
-   - Shows all fields in the C2PA manifest
-   - Displays the complete claim JSON
+The demo uses `c2pa-selective-disclosure-spec.json` (in the `demo/` directory), which specifies:
+- Which fields to disclose: `claim_generator`, `capture_time`, `issuer`
+- All other fields remain hidden (proven but not revealed)
 
-2. **Generate VCE with selective disclosure** (~10-15 minutes)
-   - Creates a zero-knowledge proof
-   - Only commits selected fields to the proof journal
-   - This is the computationally expensive step
+You can modify `c2pa-selective-disclosure-spec.json` to change which fields are disclosed. The selective disclosure operates at **top-level JSON keys only** (no nested field selection in v0.1).
 
-3. **Verify the VCE** (~5-10 seconds)
-   - Verifies the cryptographic proof
-   - Extracts the redacted manifest from the proof journal
+## Requirements
 
-4. **Display comparison**
-   - Shows **Full Manifest** (all fields) vs **Redacted Manifest** (only disclosed fields)
-   - Displays the cryptographic hash binding
+- RISC Zero toolchain installed (`rzup install`)
+- Guest program built (`make build-guest`)
+- A C2PA-signed JPEG image (or use the test fixtures)
 
-5. **Value proposition summary**
-   - Explains what was proven
-   - Explains what was hidden
-   - Explains cryptographic guarantees
+## Example Output
 
-## Selective Disclosure Configuration
+```
+Parsing C2PA manifest...
+Generating proof...
+Proof generated successfully!
 
-The demo uses `witness-spec.json`, which specifies:
+Journal Output:
+{
+  "claim_generator": "Adobe Photoshop",
+  "capture_time": "2022-01-24T12:00:00Z",
+  "issuer": "Adobe"
+}
 
-- **Disclosed Fields**: `claim_generator`, `capture_time`, `issuer`
-- **Hidden Fields**: All other fields in the manifest remain private
-
-You can modify `witness-spec.json` to change which fields are disclosed. The selective disclosure operates at **top-level JSON keys only** (no nested field selection in v0.1).
-
-## Understanding the Output
-
-### Full Manifest
-Shows the complete C2PA claim JSON with all fields visible. This represents what a traditional C2PA viewer would show.
-
-### Redacted Manifest
-Shows only the fields specified in `disclosed_fields`. All other fields are hidden from the verifier, but the proof guarantees they were verified.
-
-### Claim Hash
-The SHA256 hash of the original claim bytes. This cryptographically binds the redacted output to the specific signed manifest, preventing tampering or substitution.
-
-## Key Concepts
-
-### Zero-Knowledge Proof
-The proof demonstrates that:
-- The full manifest was verified
-- The signature was validated
-- Only selected fields were disclosed
-
-**Without revealing:**
-- Hidden field values
-- The complete manifest structure
-- Any data not explicitly disclosed
-
-### Cryptographic Binding
-The claim hash ensures that:
-- The redacted output corresponds to a specific signed manifest
-- The proof cannot be reused for a different manifest
-- Verifiers can detect if the manifest was tampered with
-
-### Public Verifiability
-Anyone can:
-- Verify the proof without trusted parties
-- Confirm that verification occurred
-- Trust that hidden fields were verified (even though they can't see them)
-
-## Troubleshooting
-
-### "Guest program not built"
-Build the guest program:
-```bash
-cargo build --release --package fuse-guest --target riscv32im-risc0-zkvm-elf
+(Note: Other fields like location, creator, etc. are proven but not revealed)
 ```
 
-### "C2PA image not found"
-Ensure `examples/c2pa/C.jpg` exists, or modify the script to point to your C2PA-signed image.
+## Files
 
-### Proof generation takes a long time
-This is expected. Current performance is ~10-15 minutes for proof generation. Optimization is planned for post-spike work.
+- `demo-c2pa-selective-disclosure.sh` - Main demo script
+- `c2pa-selective-disclosure-spec.json` - Selective disclosure specification
+- `output.vce` - Generated compliance envelope
 
-### "Failed to extract C2PA manifest"
-Ensure the image is a valid C2PA-signed asset. You can test with:
-```bash
-cargo run --release --bin inspect-c2pa -- --input examples/c2pa/C.jpg
-```
+## Learn More
 
-## Next Steps
-
-After running this demo:
-- Review the [Witness Spike documentation](../../WITNESS_SPIKE.md)
-- Check [Phase 2 Results](../../WITNESS_SPIKE_PHASE2_RESULTS.md) for performance details
-- Explore modifying `witness-spec.json` to disclose different fields
-
-## Related Files
-
-- `witness-spec.json` - Selective disclosure specification
-- `output.vce` - Generated Verifiable Compliance Envelope (created after running demo)
-- `../../fuse-cli/src/bin/fuse-prove.rs` - VCE generation tool
-- `../../fuse-cli/src/bin/fuse-verify.rs` - VCE verification tool
-
+- Review the [Architecture Documentation](../../docs/ARCHITECTURE.md)
+- Check [C2PA Integration Tests](../../fuse-core/tests/c2pa_integration.rs) for examples
+- Explore modifying `c2pa-selective-disclosure-spec.json` to disclose different fields

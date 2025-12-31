@@ -31,7 +31,7 @@ pub struct ComplianceSpec {
     pub metadata: BTreeMap<String, String>,
 
     /// Optional list of top-level JSON fields to disclose in the proof journal.
-    /// Used for selective disclosure in C2PA/Witness pivot.
+    /// Used for selective disclosure (e.g., in C2PA manifest verification).
     #[serde(default)]
     pub disclosed_fields: Option<Vec<String>>,
 }

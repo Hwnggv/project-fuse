@@ -15,7 +15,7 @@
   "version": "1.0",
   "expiry": "2099-12-31T23:59:59Z",
   "metadata": {
-    "purpose": "Phase 2 Witness Pivot: Selective Disclosure Proof"
+    "purpose": "C2PA selective disclosure example"
   }
 }
 
