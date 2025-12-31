@@ -36,6 +36,13 @@ jobs:
       - name: Install cargo-fuzz
         run: cargo install cargo-fuzz --locked
       
+      - name: Build all fuzz targets
+        run: |
+          cd fuzz
+          for target in canonicalize_json c2pa_parser ed25519_verification spec_validation borsh_decode; do
+            cargo fuzz build $target || true
+          done
+      
       - name: Run fuzzer
         run: |
           cd fuzz
