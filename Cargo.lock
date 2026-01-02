@@ -1740,7 +1740,7 @@ checksum = "e6d5a32815ae3f33302d95fdcb2ce17862f8c65363dcfd29360480ba1001fc9c"
 
 [[package]]
 name = "fuse-checkers"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "anyhow",
  "ed25519-compact",
@@ -1752,7 +1752,7 @@ dependencies = [
 
 [[package]]
 name = "fuse-cli"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "anyhow",
  "c2pa",
@@ -1775,7 +1775,7 @@ dependencies = [
 
 [[package]]
 name = "fuse-core"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "anyhow",
  "bincode",
@@ -1794,7 +1794,7 @@ dependencies = [
 
 [[package]]
 name = "fuse-guest"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "ed25519-dalek",
  "hex",
